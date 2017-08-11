@@ -20,9 +20,18 @@ namespace ReportManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+	    private ViewModel _vm;
+
+	    public MainWindow()
         {
             InitializeComponent();
+			_vm = new ViewModel(this);
+		    this.DataContext = _vm;
         }
+
+	    private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+	    {
+		    _vm.SelectedFolder = (Folder) e.NewValue;
+	    }
     }
 }

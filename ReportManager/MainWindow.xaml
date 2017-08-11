@@ -5,8 +5,139 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ReportManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="MainWindow" Height="600" Width="900">
+	<Window.Resources>
+		<Style TargetType="Control" x:Key="NormalText">
+			<Setter Property="FontSize" Value="14" />
+		</Style>
+
+		<Style TargetType="Control" x:Key="NormalColoredText" BasedOn="{StaticResource NormalText}">
+			<Setter Property="Foreground" Value="#FF13A3F5" />
+			<Setter Property="FontWeight" Value="Bold" />
+		</Style>
+
+		<Style TargetType="Label" BasedOn="{StaticResource NormalColoredText}">
+			<Setter Property="HorizontalAlignment" Value="Left" />
+			<Setter Property="Margin" Value="3" />
+		</Style>
+
+		<Style TargetType="TextBlock">
+			<Setter Property="FontWeight" Value="Bold" />
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="HorizontalAlignment" Value="Left" />
+			<Setter Property="Foreground" Value="#FF13A3F5" />
+			<Setter Property="Margin" Value="5" />
+		</Style>
+
+		<Style TargetType="TextBlock" x:Key="HeaderText" BasedOn="{StaticResource {x:Type TextBlock}}">
+			<Setter Property="FontSize" Value="20" />
+		</Style>
+
+		<Style TargetType="TextBox" BasedOn="{StaticResource NormalText}">
+			<Setter Property="Margin" Value="5" />
+		</Style>
+
+		<Style TargetType="ComboBox" BasedOn="{StaticResource NormalText}">
+			<Setter Property="Margin" Value="5" />
+		</Style>
+
+		<Style TargetType="PasswordBox" BasedOn="{StaticResource NormalText}">
+			<Setter Property="Margin" Value="5" />
+		</Style>
+
+		<Style TargetType="TabItem">
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="Padding" Value="10" />
+			<Setter Property="MinWidth" Value="125" />
+		</Style>
+
+		<Style TargetType="TabControl">
+			<Setter Property="Padding" Value="10" />
+		</Style>
+
+		<Style TargetType="CheckBox" BasedOn="{StaticResource NormalColoredText}">
+			<Setter Property="HorizontalAlignment" Value="Left" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="VerticalContentAlignment" Value="Center" />
+			<Setter Property="Margin" Value="5" />
+		</Style>
+
+		<Style TargetType="Button" x:Key="BrowseButtonStyle">
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="Margin" Value="5" />
+			<Setter Property="MinWidth" Value="30" />
+		</Style>
+
+		<Style TargetType="Button">
+			<Setter Property="FontSize" Value="12" />
+			<Setter Property="Padding" Value="2" />
+			<Setter Property="Margin" Value="5" />
+			<Setter Property="MinWidth" Value="80" />
+		</Style>
+
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+	</Window.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<StackPanel Grid.Row="0" Grid.Column="0">
+			<Label Content="ReportService Url"/>
+			<Grid >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<TextBox Text="{Binding Url}" Grid.Column="0"/>
+				<Button Content="Fetch" Grid.Column="1" Command="{Binding FetchCommand}"></Button>
+			</Grid>
+		</StackPanel>
+		<Grid Grid.Row="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+			<StackPanel Grid.Row="0" Grid.Column="0" Margin="3">
+				<Label Content="Folders" MinWidth="100"></Label>
+				<TreeView ItemsSource="{Binding RootFolder.SubFolders}" SelectedItemChanged="TreeView_OnSelectedItemChanged" >
+					<TreeView.ItemTemplate>
+						<HierarchicalDataTemplate ItemsSource="{Binding SubFolders}">
+							<TextBlock Text="{Binding Name}"></TextBlock>
+						</HierarchicalDataTemplate>
+					</TreeView.ItemTemplate>
+				</TreeView>
+				
+			</StackPanel>
+			<StackPanel Grid.Row="0" Grid.Column="1" Margin="3">
+				<Label Content="Reports"></Label>
+				<DataGrid ItemsSource="{Binding SelectedFolder.Reports}" 
+						  CanUserResizeColumns="True"
+						  CanUserSortColumns="True"
+						  AutoGenerateColumns="False"
+						  >
+					<DataGrid.Columns>
+						<DataGridTextColumn Header="Name" Binding="{Binding Name}"></DataGridTextColumn>
+						<DataGridTextColumn Header="ModBy" Binding="{Binding ModifiedBy}"></DataGridTextColumn>
+						<DataGridTextColumn Header="ModDate" Binding="{Binding ModifiedDate}"></DataGridTextColumn>
+						<DataGridTextColumn Header="DataSource" Binding="{Binding DataSource}"></DataGridTextColumn>
+						
+					</DataGrid.Columns>
+				</DataGrid>
+				<StackPanel Orientation="Horizontal">
+					<Button Content="Upload Reports" Command="{Binding UploadCommand}"></Button>
+				</StackPanel>
+			</StackPanel>
+
+		</Grid>
+		<TextBlock Grid.Row="2" Text="{Binding Status}"></TextBlock>
+	</Grid>
 </Window>
